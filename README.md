@@ -1,28 +1,15 @@
 # DappCamp Warriors
 
-## Create ERC20
+## Deploy
 
-### Overview
+With the same helpers we used to deploy in our tests, we can deploy locally, to testnet and to mainnet.
 
-We already scaffolded the project.
+### Deploying to testnet/mainnet
 
-Now, it's time to create our fungible token: **$CAMP**.
+_Make sure you created a .env file with your variables (check .env.example)._
 
-We will try and implement an ERC20 contract that implements the [ERC20](https://ethereum.org/es/developers/docs/standards/tokens/erc-20/) standard. We will also later switch to a more secure implementation using OpenZeppelin.
+Run the following commands, in the same order (change `ropsten` for the network you wanna deploy to):
 
-The contract in OpenZeppelin could be as simple as this:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
-
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
-contract Camp is ERC20 {
-    constructor() ERC20("Camp", "CAMP") {}
-}
+```bash
+npx hardhat run scripts/deploy-camp.ts --network ropsten
 ```
-
-But we will add some extra magic to have more control over the supply, determining who can mint it and who can burn it.
-
-Go to [Camp.sol](contracts/Camp.sol) to see the explained implementation.
