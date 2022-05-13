@@ -20,4 +20,26 @@ contract Camp{
         owner = msg.sender;
     }
 
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    function transfer(address _to, uint256 _amount) external returns (bool) {
+
+    }
+
+    function approve(
+        address spender,
+        uint256 amount
+    ) external returns (bool) {
+        
+    }
+
+    function allowance(address _owner, address _spender) public view returns (uint256) {
+        
+    }
+
+    function transferFrom(address _from, address _to, uint256 _amount) external returns (bool) {
+        
+    }
 }
