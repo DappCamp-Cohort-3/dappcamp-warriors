@@ -2,7 +2,9 @@ import { BaseContract, ContractFactory } from "ethers";
 import { ethers } from "hardhat";
 import {
   Camp,
-  Camp__factory as CampFactory
+  Camp__factory as CampFactory,
+  DappCampWarriors,
+  DappCampWarriors__factory as DappCampWarriorsFactory,
 } from "../typechain";
 
 type GetContractParams<Factory extends ContractFactory> =
@@ -55,3 +57,7 @@ export const getContract = async <
 
 export const getCamp = (params: GetContractParams<CampFactory>) =>
   getContract<CampFactory, Camp>(params);
+
+export const getDappCampWarriors = (
+  params: GetContractParams<DappCampWarriorsFactory>
+) => getContract<DappCampWarriorsFactory, DappCampWarriors>(params);
