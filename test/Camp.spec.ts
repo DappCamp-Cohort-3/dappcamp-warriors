@@ -8,7 +8,6 @@ describe("Camp tests", () => {
   let campContract: Camp;
   let deployer: SignerWithAddress;
   let account1: SignerWithAddress;
-
   /**
    * @dev As you may already know, Solidity doesn't support floating point numbers.
    * An Ether amount can have up to 18 decimals and ERC20 too (by default).
@@ -20,89 +19,42 @@ describe("Camp tests", () => {
   beforeEach(async () => {
     campContract = await getCamp({ contractName: "Camp", deployParams: [] });
     [deployer, account1] = await ethers.getSigners();
-    
-    await campContract.mint(deployer.address, oneCampInWei);
   });
 
-  describe("deploy", () => {
-    it("Should check if the deployer is the owner", async () => {
-      expect(
-        await campContract.connect(account1).owner()
-      ).to.eq(deployer.address);
-    });
-  });
-
-  describe("transfer", () => {
-    it("Should transfer tokens from caller to address specified", async () => {
-      expect(
-        await campContract.transfer(account1.address, oneCampInWei)
-      ).to.changeTokenBalance(campContract, account1, oneCampInWei);
-    });
-
-    it("Should emit transfer event", async () => {
-      expect(
-        await campContract.transfer(account1.address, oneCampInWei)
-      ).to
-      .emit(campContract, "Transfer")
-      .withArgs(deployer.address, account1.address, oneCampInWei);
-    });
-
-    it("Should revert when called from address with insufficient balance", async () => {
+  describe("mint", () => {
+    it("Should revert if the caller is not the owner", async () => {
       await expect(
-        campContract.connect(account1).transfer(deployer.address, oneCampInWei)
-      ).to.be.reverted;
+        campContract.connect(account1).mint(deployer.address, oneCampInWei)
+      ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("Should work when called by the owner", async () => {
+      await campContract.mint(deployer.address, oneCampInWei);
+
+      const balance = await campContract.balanceOf(deployer.address);
+      expect(balance).to.equal(oneCampInWei);
     });
   });
 
-  describe("transferFrom", () => {
-    it("Should transfer tokens between given accounts", async () => {
-      await campContract.approve(account1.address, oneCampInWei);
-
-      expect(
-        await campContract.connect(account1).transferFrom(deployer.address, account1.address, oneCampInWei)
-      ).to.changeTokenBalance(campContract, account1, oneCampInWei);
-    });
-
-    it("Should emit transfer event", async () => {
-      await campContract.approve(account1.address, oneCampInWei);
-
-      expect(
-        await campContract.connect(account1).transferFrom(deployer.address, account1.address, oneCampInWei)
-      ).to
-      .emit(campContract, "Transfer")
-      .withArgs(deployer.address, account1.address, oneCampInWei);
-    });
-
-    it("Should revert when approval is not done", async () => {
+  describe("burn", () => {
+    it("Should revert if the caller is not the owner", async () => {
       await expect(
-        campContract.connect(account1).transferFrom(deployer.address, account1.address, oneCampInWei)
-      ).to.be.reverted;
+        campContract.connect(account1).burn(deployer.address, oneCampInWei)
+      ).to.be.revertedWith("Ownable: caller is not the owner");
     });
-  });
 
-  describe("balanceOf", () => {
-    it("Should return the correct balance of an address", async () => {
-      expect(
-        await campContract.balanceOf(deployer.address)
-      ).to.eq(oneCampInWei);
-    });
-  });
+    it("Should work when called by the owner", async () => {
+      const halfCampInWei = oneCampInWei.div(2);
 
-  describe("balanceOf", () => {
-    it("Should return the correct balance of an address", async () => {
-      expect(
-        await campContract.balanceOf(deployer.address)
-      ).to.eq(oneCampInWei);
-    });
-  });
+      /**
+       * @dev Mint so we have something to burn
+       */
+      await campContract.mint(deployer.address, oneCampInWei);
 
-  describe("allowance", () => {
-    it("Should return the correct allowance for given owner and sender", async () => {
-      await campContract.approve(account1.address, oneCampInWei);
+      await campContract.burn(deployer.address, halfCampInWei);
 
-      expect(
-        await campContract.allowance(deployer.address, account1.address)
-      ).to.eq(oneCampInWei);
+      const balance = await campContract.balanceOf(deployer.address);
+      expect(balance).to.equal(halfCampInWei);
     });
   });
 });
