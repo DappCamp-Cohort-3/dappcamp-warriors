@@ -24,6 +24,8 @@ type GetContractParams<Factory extends ContractFactory> =
       getContractFactoryParams?: GetContractFactoryParams;
     };
 
+const enableLogs = process.env.NODE_ENV !== "test";
+
 /**
  * @description Either deploys a new contract or gets an existing one.
  * Useful for deploying test contracts and also to deploy to localnet/testnet/mainnet.
@@ -51,16 +53,20 @@ export const getContract = async <
 
   const isGetExistingContract = Boolean(existingContractAddress);
   if (isGetExistingContract) {
-    console.log(
-      "Getting existing contract from address:",
-      existingContractAddress
-    );
+    enableLogs &&
+      console.log(
+        "Getting existing contract from address:",
+        existingContractAddress
+      );
     return ContractFactory.attach(existingContractAddress!) as Contract;
   }
 
-  const contract = (await ContractFactory.deploy(...deployParams!)) as Contract;
+  const contract = (await ContractFactory.deploy(
+    ...(deployParams || [])
+  )) as Contract;
   await contract.deployed();
 
+  enableLogs && console.log(`Deployed ${contractName} to ${contract.address}`);
   return contract;
 };
 
@@ -68,19 +74,21 @@ type GetContractConfig = {
   getContractFactoryParams?: GetContractFactoryParams;
 };
 
-export const getCamp = (getContractConfig: GetContractConfig = {}) =>
+export const getCamp = (
+  getContractConfig: GetContractParams<CampFactory> = { deployParams: [] }
+) =>
   getContract<CampFactory, Camp>({
     contractName: "Camp",
-    deployParams: [],
     ...getContractConfig,
   });
 
 export const getDappCampWarriors = (
-  getContractConfig: GetContractConfig = {}
+  getContractConfig: GetContractParams<DappCampWarriorsFactory> = {
+    deployParams: [],
+  }
 ) =>
   getContract<DappCampWarriorsFactory, DappCampWarriors>({
     contractName: "DappCampWarriors",
-    deployParams: [],
     ...getContractConfig,
   });
 
