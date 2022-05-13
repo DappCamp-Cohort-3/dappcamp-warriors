@@ -53,4 +53,56 @@ describe("Camp tests", () => {
       ).to.be.reverted;
     });
   });
+
+  describe("transferFrom", () => {
+    it("Should transfer tokens between given accounts", async () => {
+      await campContract.approve(account1.address, oneCampInWei);
+
+      expect(
+        await campContract.connect(account1).transferFrom(deployer.address, account1.address, oneCampInWei)
+      ).to.changeTokenBalance(campContract, account1, oneCampInWei);
+    });
+
+    it("Should emit transfer event", async () => {
+      await campContract.approve(account1.address, oneCampInWei);
+
+      expect(
+        await campContract.connect(account1).transferFrom(deployer.address, account1.address, oneCampInWei)
+      ).to
+      .emit(campContract, "Transfer")
+      .withArgs(deployer.address, account1.address, oneCampInWei);
+    });
+
+    it("Should revert when approval is not done", async () => {
+      await expect(
+        campContract.connect(account1).transferFrom(deployer.address, account1.address, oneCampInWei)
+      ).to.be.reverted;
+    });
+  });
+
+  describe("balanceOf", () => {
+    it("Should return the correct balance of an address", async () => {
+      expect(
+        await campContract.balanceOf(deployer.address)
+      ).to.eq(oneCampInWei);
+    });
+  });
+
+  describe("balanceOf", () => {
+    it("Should return the correct balance of an address", async () => {
+      expect(
+        await campContract.balanceOf(deployer.address)
+      ).to.eq(oneCampInWei);
+    });
+  });
+
+  describe("allowance", () => {
+    it("Should return the correct allowance for given owner and sender", async () => {
+      await campContract.approve(account1.address, oneCampInWei);
+
+      expect(
+        await campContract.allowance(deployer.address, account1.address)
+      ).to.eq(oneCampInWei);
+    });
+  });
 });
