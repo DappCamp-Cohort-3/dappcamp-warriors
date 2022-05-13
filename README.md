@@ -1,6 +1,8 @@
 # DappCamp Warriors
 
 This repo contains a step by step walkthrough towards a fully fledged dApp that combines an NFT collection, an ERC20 token, and DeFi.
+Huge shoutout to [Lucas Janon](https://github.com/lucas-janon), a DappCamp alumni from Cohort 2 for his help with his repo. 
+This repo is a fork of his original repo [here](https://github.com/dappcamp/dappcamp-warriors)
 
 ## Repo structure
 
