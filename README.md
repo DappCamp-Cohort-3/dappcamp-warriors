@@ -1,15 +1,10 @@
 # DappCamp Warriors
 
-## Deploy
+## Create ERC721
 
-With the same helpers we used to deploy in our tests, we can deploy locally, to testnet and to mainnet.
+### Overview
 
-### Deploying to testnet/mainnet
+In this branch we'll give birth to the DappCamp warriors, an NFT collection using [ERC721](https://eips.ethereum.org/EIPS/eip-721).
 
-_Make sure you created a .env file with your variables (check .env.example)._
-
-Run the following commands, in the same order (change `ropsten` for the network you wanna deploy to):
-
-```bash
-npx hardhat run scripts/deploy-camp.ts --network ropsten
-```
+Let's now go to [DappCampWarriors.sol](contracts/DappCampWarriors.sol), as you can see, the file is fully commented explaining what's going on.
+The format of the comments follows [NatSpec](https://docs.soliditylang.org/en/v0.8.13/natspec-format.html), the standard comment format for Solidity code.
