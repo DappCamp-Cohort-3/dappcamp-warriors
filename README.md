@@ -1,10 +1,9 @@
 # DappCamp Warriors
 
-## Create ERC721
+## NFT staking
 
-### Overview
+In the context of crypto, staking can be defined as holding an asset to get rewards in exchange, you can read more [here](https://www.coinbase.com/learn/crypto-basics/what-is-staking).
 
-In this branch we'll give birth to the DappCamp warriors, an NFT collection using [ERC721](https://eips.ethereum.org/EIPS/eip-721).
+In this branch, we'll work on a staking contract that locks NFTs and gives ERC20 rewards.
 
-Let's now go to [DappCampWarriors.sol](contracts/DappCampWarriors.sol), as you can see, the file is fully commented explaining what's going on.
-The format of the comments follows [NatSpec](https://docs.soliditylang.org/en/v0.8.13/natspec-format.html), the standard comment format for Solidity code.
+There's two important new files: [contracts/Staking.sol](contracts/Staking.sol) and [test/Staking.spec.ts](test/Staking.spec.ts), like always, they have explanatory comments.
