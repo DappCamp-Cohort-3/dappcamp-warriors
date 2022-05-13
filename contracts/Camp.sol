@@ -20,12 +20,30 @@ contract Camp{
         owner = msg.sender;
     }
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Sender is not the owner");
+        _;
+    }
+
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
-    function transfer(address _to, uint256 _amount) external returns (bool) {
+    function _transfer(address _from, address _to, uint256 amount) private {
+        require(_to != address(0), "Transfer to the zero address");
+        require(_from != address(0), "Transfer from the zero address");
 
+        uint256 fromBalance = _balances[_from];
+        require(fromBalance >= amount, "Transfer amount exceeds balance");
+        _balances[_from] = fromBalance - amount;
+        _balances[_to] += amount;
+
+        emit Transfer(_from, _to, amount);
+    }
+
+    function transfer(address _to, uint256 _amount) external returns (bool) {
+        _transfer(msg.sender, _to, _amount);
+        return true;
     }
 
     function approve(
@@ -40,6 +58,14 @@ contract Camp{
     }
 
     function transferFrom(address _from, address _to, uint256 _amount) external returns (bool) {
-        
+
+    }
+
+    function mint(address _to, uint256 _amount) public onlyOwner {
+        require(_to != address(0), "Mint to the zero address");
+
+        _totalSupply += _amount;
+        _balances[_to] += _amount;
+        emit Transfer(address(0), _to, _amount);
     }
 }
